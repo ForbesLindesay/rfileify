@@ -1,0 +1,18 @@
+usage:
+
+  rfileify file
+ 
+    Inline `rfile()` and `ruglify()` calls from `file`, printing the transformed file
+    contents to stdout.
+
+  rfileify
+  rfileify -
+ 
+    Inline `rfile()` and `ruglify()` calls from stdin, printing the transformed file
+    contents to stdout.
+
+N.B.
+
+  You must have `rfile` and `ruglify` installed to use them:
+
+  npm install rfile ruglify -g

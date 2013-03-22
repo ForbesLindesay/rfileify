@@ -1,0 +1,46 @@
+{
+  "name": "rfileify",
+  "version": "0.0.0",
+  "description": "Convert any code using rfile and derivatives so that it supports browserify",
+  "main": "index.js",
+  "bin": {
+    "rfileify": "./bin/rfileify"
+  },
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ForbesLindesay/rfileify.git"
+  },
+  "keywords": [
+    "browserify",
+    "fs",
+    "readFileSync",
+    "plugin",
+    "static",
+    "asset",
+    "bundle",
+    "base64",
+    "uglify",
+    "require",
+    "resolve",
+    "browser",
+    "rfile"
+  ],
+  "author": "ForbesLindesay",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "96b6644e686bfe5dde7d77536e6166e365df0681",
+  "dependencies": {
+    "through": "~2.2.7",
+    "escodegen": "0.0.19",
+    "falafel": "~0.2.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.2",
+    "browserify": "~2.7.2",
+    "rfile": "~1.0.0",
+    "ruglify": "~1.0.0"
+  }
+}
