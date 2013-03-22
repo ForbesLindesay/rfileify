@@ -2,6 +2,9 @@
 
   Convert any code using rfile and derivatives so that it supports browserify.
 
+[![Build Status](https://travis-ci.org/ForbesLindesay/rfileify.png?branch=master)](https://travis-ci.org/ForbesLindesay/rfileify)
+[![Dependency Status](https://gemnasium.com/ForbesLindesay/rfileify.png)](https://gemnasium.com/ForbesLindesay/rfileify)
+
   This module is a plugin for [browserify](http://browserify.org/) to parse the AST for `rfile` calls so that you can inline the file contents into your bundles.
 
   In addition to supporting `rfile`, you can also use modules which internally use `rfile` providing they meet the simple requirement of taking an object with `dirname` property as their second argument and are listed in the array of valid file names modules in index.js.  Currently this is:
