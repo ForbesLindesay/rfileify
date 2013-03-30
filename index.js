@@ -21,11 +21,11 @@ module.exports = function (file) {
         
         var output = falafel(data, function (node) {
             if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && variableDeclarationName(node.parent)) {
-                rfileNames[variableDeclarationName(node.parent)] = requireName(node);
+                rfileNames['key:' + variableDeclarationName(node.parent)] = requireName(node);
                 node.update('undefined');
             }
-            if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames[node.callee.name]) {
-                var rfile = require(rfileNames[node.callee.name]);
+            if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
+                var rfile = require(rfileNames['key:' + node.callee.name]);
                 var args = node.arguments;
                 for (var i = 0; i < args.length; i++) {
                     var t = 'return ' + unparse(args[i]);
