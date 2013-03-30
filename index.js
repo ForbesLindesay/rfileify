@@ -2,11 +2,12 @@ var path = require('path');
 
 var through = require('through');
 var falafel = require('falafel');
-var unparse = require('escodegen').generate;
 
 var rfileModules = ['rfile', 'ruglify'];
 
 module.exports = function (file) {
+    if (/\.json$/.test(file)) return through();
+
     var data = '';
     var rfileNames = {};
     var dirname = path.dirname(file);
@@ -18,25 +19,29 @@ module.exports = function (file) {
     function write (buf) { data += buf }
     function end () {
         var tr = this;
-        
-        var output = falafel(data, function (node) {
-            if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && variableDeclarationName(node.parent)) {
-                rfileNames['key:' + variableDeclarationName(node.parent)] = requireName(node);
-                node.update('undefined');
-            }
-            if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
-                var rfile = require(rfileNames['key:' + node.callee.name]);
-                var args = node.arguments;
-                for (var i = 0; i < args.length; i++) {
-                    var t = 'return ' + unparse(args[i]);
-                    args[i] = Function(varNames, t).apply(null, vars);
+        var parsed = false;
+        try {
+            var output = falafel(data, function (node) {
+                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && variableDeclarationName(node.parent)) {
+                    rfileNames['key:' + variableDeclarationName(node.parent)] = requireName(node);
+                    node.update('undefined');
                 }
-                args[1] = args[1] || {};
-                args[1].basedir = args[1].basedir || dirname;
-                node.update(JSON.stringify(rfile.apply(null, args)));
-            }
-        });
-        
+                if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
+                    var rfile = require(rfileNames['key:' + node.callee.name]);
+                    var args = node.arguments;
+                    for (var i = 0; i < args.length; i++) {
+                        var t = 'return ' + (args[i]).source();
+                        args[i] = Function(varNames, t).apply(null, vars);
+                    }
+                    args[1] = args[1] || {};
+                    args[1].basedir = args[1].basedir || dirname;
+                    node.update(JSON.stringify(rfile.apply(null, args)));
+                }
+            });
+        } catch (ex) {
+            if (parsed) return tr.emit('error', ex), tr.queue(data), tr.queue(null);
+            else return tr.queue(data), tr.queue(null);
+        }
         tr.queue(String(output));
         tr.queue(null);
     }
