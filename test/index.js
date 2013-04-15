@@ -5,7 +5,7 @@ var fs = require('fs');
 var path = require('path');
 var assert = require('assert');
 
-var html = fs.readFileSync(__dirname + '/files/robot.html', 'utf8');
+var html = fs.readFileSync(__dirname + '/files/robot.html', 'utf8').replace(/\r/g, '');
 
 describe('rfile(path)', function () {
   it('inlines the text', function (done) {
