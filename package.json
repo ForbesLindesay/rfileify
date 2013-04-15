@@ -1,6 +1,6 @@
 {
   "name": "rfileify",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Convert any code using rfile and derivatives so that it supports browserify",
   "main": "index.js",
   "bin": {
@@ -14,19 +14,9 @@
     "url": "https://github.com/ForbesLindesay/rfileify.git"
   },
   "keywords": [
-    "browserify",
-    "fs",
-    "readFileSync",
-    "plugin",
-    "static",
-    "asset",
-    "bundle",
-    "base64",
-    "uglify",
-    "require",
-    "resolve",
-    "browser",
-    "rfile"
+    "browserify", "fs", "readFileSync", "plugin", "static",
+    "asset", "bundle", "base64", "uglify", "require", "resolve",
+    "browser", "rfile"
   ],
   "author": "ForbesLindesay",
   "license": "MIT",
