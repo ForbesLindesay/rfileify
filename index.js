@@ -22,9 +22,13 @@ module.exports = function (file) {
         var parsed = false;
         try {
             var output = falafel(data, function (node) {
-                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && variableDeclarationName(node.parent)) {
-                    rfileNames['key:' + variableDeclarationName(node.parent)] = requireName(node);
-                    node.update('undefined');
+                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
+                    rfileNames['key:' + rfileVariableName(node)] = requireName(node);
+                    if (variableDeclarationName(node)) {
+                      node.update('undefined');
+                    } else if (variableAssignmentName(node)) {
+                      node.parent.update('// removed rfile require');
+                    }
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
                     var rfile = require(rfileNames['key:' + node.callee.name]);
@@ -53,8 +57,18 @@ function requireName(node) {
         return node.arguments[0].value;
     }
 }
-function variableDeclarationName(node) {
+function variableDeclarationName(child) {
+    var node = child.parent;
     if (node && node.type === 'VariableDeclarator' && node.id.type === 'Identifier') {
         return node.id.name;
     }
+}
+function variableAssignmentName(child) {
+    var node = child.parent;
+    if (node && node.type === 'AssignmentExpression' && node.operator === '=') {
+        return node.left.name;
+    }
+}
+function rfileVariableName(node) {
+    return variableDeclarationName(node) || variableAssignmentName(node);
 }
