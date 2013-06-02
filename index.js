@@ -24,10 +24,11 @@ module.exports = function (file) {
             var output = falafel(data, function (node) {
                 if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
                     rfileNames['key:' + rfileVariableName(node)] = requireName(node);
+                    var deadCode = 'undefined /* removed rfile require */';
                     if (variableDeclarationName(node)) {
-                      node.update('undefined');
+                      node.update(deadCode);
                     } else if (variableAssignmentName(node)) {
-                      node.parent.update('// removed rfile require');
+                      node.parent.update(deadCode);
                     }
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
