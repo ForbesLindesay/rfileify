@@ -4,6 +4,7 @@ var through = require('through');
 var falafel = require('falafel');
 
 var rfileModules = ['rfile', 'ruglify'];
+var deadCode = 'undefined /* removed rfile require */';
 
 module.exports = function (file) {
     if (/\.json$/.test(file)) return through();
@@ -22,9 +23,9 @@ module.exports = function (file) {
         var parsed = false;
         try {
             var output = falafel(data, function (node) {
-                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && variableDeclarationName(node.parent)) {
-                    rfileNames['key:' + variableDeclarationName(node.parent)] = requireName(node);
-                    node.update('undefined');
+                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node.parent)) {
+                    rfileNames['key:' + rfileVariableName(node.parent)] = requireName(node);
+                    node.update(deadCode);
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
                     var rfile = require(rfileNames['key:' + node.callee.name]);
@@ -57,4 +58,13 @@ function variableDeclarationName(node) {
     if (node && node.type === 'VariableDeclarator' && node.id.type === 'Identifier') {
         return node.id.name;
     }
+}
+function variableAssignmentName(node) {
+    if (node && node.type === 'AssignmentExpression' && node.operator === '=' &&
+        node.left.type === 'Identifier') {
+        return node.left.name;
+    }
+}
+function rfileVariableName(node) {
+    return variableDeclarationName(node) || variableAssignmentName(node);
 }
