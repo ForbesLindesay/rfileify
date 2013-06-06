@@ -4,6 +4,7 @@ var through = require('through');
 var falafel = require('falafel');
 
 var rfileModules = ['rfile', 'ruglify'];
+var deadCode = 'undefined /* removed rfile require */';
 
 module.exports = function (file) {
     if (/\.json$/.test(file)) return through();
@@ -24,7 +25,6 @@ module.exports = function (file) {
             var output = falafel(data, function (node) {
                 if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
                     rfileNames['key:' + rfileVariableName(node)] = requireName(node);
-                    var deadCode = 'undefined /* removed rfile require */';
                     if (variableDeclarationName(node.parent)) {
                       node.update(deadCode);
                     } else if (variableAssignmentName(node.parent)) {
