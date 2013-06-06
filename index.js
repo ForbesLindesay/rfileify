@@ -25,9 +25,9 @@ module.exports = function (file) {
                 if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
                     rfileNames['key:' + rfileVariableName(node)] = requireName(node);
                     var deadCode = 'undefined /* removed rfile require */';
-                    if (variableDeclarationName(node)) {
+                    if (variableDeclarationName(node.parent)) {
                       node.update(deadCode);
-                    } else if (variableAssignmentName(node)) {
+                    } else if (variableAssignmentName(node.parent)) {
                       node.parent.update(deadCode);
                     }
                 }
@@ -58,18 +58,16 @@ function requireName(node) {
         return node.arguments[0].value;
     }
 }
-function variableDeclarationName(child) {
-    var node = child.parent;
+function variableDeclarationName(node) {
     if (node && node.type === 'VariableDeclarator' && node.id.type === 'Identifier') {
         return node.id.name;
     }
 }
-function variableAssignmentName(child) {
-    var node = child.parent;
+function variableAssignmentName(node) {
     if (node && node.type === 'AssignmentExpression' && node.operator === '=') {
         return node.left.name;
     }
 }
 function rfileVariableName(node) {
-    return variableDeclarationName(node) || variableAssignmentName(node);
+    return variableDeclarationName(node.parent) || variableAssignmentName(node.parent);
 }
