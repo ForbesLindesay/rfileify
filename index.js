@@ -25,11 +25,7 @@ module.exports = function (file) {
             var output = falafel(data, function (node) {
                 if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
                     rfileNames['key:' + rfileVariableName(node)] = requireName(node);
-                    if (variableDeclarationName(node.parent)) {
-                      node.update(deadCode);
-                    } else if (variableAssignmentName(node.parent)) {
-                      node.parent.update(deadCode);
-                    }
+                    node.update(deadCode);
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
                     var rfile = require(rfileNames['key:' + node.callee.name]);
