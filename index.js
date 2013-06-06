@@ -23,8 +23,8 @@ module.exports = function (file) {
         var parsed = false;
         try {
             var output = falafel(data, function (node) {
-                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node)) {
-                    rfileNames['key:' + rfileVariableName(node)] = requireName(node);
+                if (requireName(node) && rfileModules.indexOf(requireName(node)) != -1 && rfileVariableName(node.parent)) {
+                    rfileNames['key:' + rfileVariableName(node.parent)] = requireName(node);
                     node.update(deadCode);
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
@@ -65,5 +65,5 @@ function variableAssignmentName(node) {
     }
 }
 function rfileVariableName(node) {
-    return variableDeclarationName(node.parent) || variableAssignmentName(node.parent);
+    return variableDeclarationName(node) || variableAssignmentName(node);
 }
