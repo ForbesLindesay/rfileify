@@ -1,5 +1,6 @@
 var path = require('path');
 
+var rfile = require('rfile');
 var through = require('through');
 var falafel = require('falafel');
 
@@ -43,7 +44,7 @@ module.exports = function rfileify(file) {
                     node.update(deadCode);
                 }
                 if (node.type === 'CallExpression' && node.callee.type === 'Identifier' && rfileNames['key:' + node.callee.name]) {
-                    var rfile = require(rfileNames['key:' + node.callee.name]);
+                    var rmodule = require(rfileNames['key:' + node.callee.name]);
                     var args = node.arguments;
                     for (var i = 0; i < args.length; i++) {
                         var t = 'return ' + (args[i]).source();
@@ -51,7 +52,7 @@ module.exports = function rfileify(file) {
                     }
                     args[1] = args[1] || {};
                     args[1].basedir = args[1].basedir || dirname;
-                    node.update(transformer.transform(rfile, args, dirname));
+                    node.update(transformer.transform(rmodule, args, dirname));
                 }
             });
         } catch (ex) {
@@ -94,8 +95,8 @@ function createTransformer(options) {
 // Default transformer replaces rfile() calls with inline file contents.
 function InlineTransformer() {}
 InlineTransformer.prototype.preprocess = function() {}
-InlineTransformer.prototype.transform = function(rfile, args, dirname) {
-    return JSON.stringify(rfile.apply(null, args));
+InlineTransformer.prototype.transform = function(rmodule, args, dirname) {
+    return JSON.stringify(rmodule.apply(null, args));
 }
 
 // Non-inline transformer replaces rfile() calls with require() calls, and
@@ -107,16 +108,17 @@ ModuleTransformer.prototype.preprocess = function(file) {
     var fullpath = path.resolve(file);
     if (this.entries.hasOwnProperty(fullpath)) {
         var entry = this.entries[fullpath];
-        var contents = entry.rfile.apply(null, entry.args);
+        var contents = entry.rmodule.apply(null, entry.args);
         return 'module.exports = ' + JSON.stringify(contents);
     }
 }
-ModuleTransformer.prototype.transform = function(rfile, args, dirname) {
+ModuleTransformer.prototype.transform = function(rmodule, args, dirname) {
+    var resolve = rmodule.resolve || rfile.resolve;
     var fullpath = path.join(args[1].basedir, args[0]);
-    var relpath = path.relative(dirname, fullpath);
+    var relpath = path.relative(dirname, resolve.apply(null, args));
     this.entries[fullpath] = {
         args: args,
-        rfile: rfile
+        rmodule: rmodule
     };
     return 'require(' + JSON.stringify('./' + relpath) + ')';
 }
