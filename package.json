@@ -38,6 +38,7 @@
     "mocha": "~1.9",
     "browserify": "~2.12",
     "rfile": "~1.0.0",
+    "rhtml": "~0.0.1",
     "ruglify": "~1.0.0"
   }
 }
