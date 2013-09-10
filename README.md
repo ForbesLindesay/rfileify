@@ -11,6 +11,7 @@
 
   - [rfile](https://github.com/ForbesLindesay/rfile) - "require" static text files
   - [ruglify](https://github.com/ForbesLindesay/ruglify) - "require" minified source code
+  - [rhtml](https://github.com/yaru22/rhtml) - "require" minified HTML
 
 Even though this module is intended for use with browserify, nothing about it is particularly specific to browserify so it should be generally useful in other projects.
 

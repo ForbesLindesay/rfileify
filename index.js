@@ -3,7 +3,7 @@ var path = require('path');
 var through = require('through');
 var falafel = require('falafel');
 
-var rfileModules = ['rfile', 'ruglify'];
+var rfileModules = ['rfile', 'rhtml', 'ruglify'];
 var deadCode = 'undefined /* removed rfile require */';
 
 module.exports = function (file) {
