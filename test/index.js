@@ -50,4 +50,44 @@ describe('rfile(path)', function () {
       if (0 === --remaining) done();
     }
   })
+  it('allows inlining to be turned off', function (done) {
+    var remaining = 6;
+
+    var expectedRequires = [
+      './robot.html',
+      './robot.html',
+      './answer.js'
+    ];
+
+    var b = browserify();
+    var rfileify = require(path.dirname(__dirname));
+    b.add(__dirname + '/files/sample.js');
+    b.transform(rfileify({inline: false}));
+
+    b.bundle(function (err, src) {
+      if (err) throw err;
+
+      // Verify correct execution.
+      vm.runInNewContext(src, { console: { log: log, dir: dir } });
+
+      // Verify that each module was required, not inlined.
+      var patched = src.replace(/\brequire\(/g, 'req(');
+      vm.runInNewContext(patched, { console: { log: noop, dir: noop}, req: req });
+
+    });
+
+    function noop () {}
+    function log (msg) {
+      assert.equal(msg, html);
+      if (0 === --remaining) done();
+    }
+    function dir (msg) {
+      assert.equal(msg, '42');
+      if (0 === --remaining) done();
+    }
+    function req (name) {
+      assert.equal(name, expectedRequires.shift());
+      if (0 === --remaining) done();
+    }
+  })
 });
