@@ -32,7 +32,7 @@
   "license": "MIT",
   "dependencies": {
     "through": "~2.3.1",
-    "falafel": "~0.2.1"
+    "falafel": "~0.3.1"
   },
   "devDependencies": {
     "mocha": "~1.9",
