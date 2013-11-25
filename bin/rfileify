@@ -18,4 +18,10 @@ var rs = fromFile
 
 var fpath = fromFile ? file : path.join(process.cwd(), '-');
 rs.pipe(rfileify(fpath)).pipe(process.stdout);
-rs.resume();
+if (isPre0_10()) { rs.resume(); } // OLD stream reader interface (pre-v0.10) ONLY: start reading stdin input - see http://stackoverflow.com/a/20181116/45375
+
+// Indicates if the node.js version is < 0.10.
+function isPre0_10() {
+  var aVerComponents = process.version.slice(1).split('.').map(Number);
+  return aVerComponents[0] === 0 && aVerComponents[1] < 10;
+}
