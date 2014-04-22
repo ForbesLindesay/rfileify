@@ -2,8 +2,8 @@
 
   Convert any code using rfile and derivatives so that it supports browserify.
 
-[![Build Status](https://travis-ci.org/ForbesLindesay/rfileify.png?branch=master)](https://travis-ci.org/ForbesLindesay/rfileify)
-[![Dependency Status](https://gemnasium.com/ForbesLindesay/rfileify.png)](https://gemnasium.com/ForbesLindesay/rfileify)
+[![Build Status](https://img.shields.io/travis/ForbesLindesay/rfileify/master.svg)](https://travis-ci.org/ForbesLindesay/rfileify)
+[![Dependency Status](https://img.shields.io/gemnasium/ForbesLindesay/rfileify.svg)](https://gemnasium.com/ForbesLindesay/rfileify)
 
   This module is a plugin for [browserify](http://browserify.org/) to parse the AST for `rfile` calls so that you can inline the file contents into your bundles.
 
