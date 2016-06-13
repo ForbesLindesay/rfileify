@@ -1,3 +1,5 @@
+# THIS MODULES IS NO LONGER MAINTAINED
+
 # rfileify
 
   Convert any code using rfile and derivatives so that it supports browserify.
