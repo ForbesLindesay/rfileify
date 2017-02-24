@@ -1,5 +1,7 @@
 # THIS MODULES IS NO LONGER MAINTAINED
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/ForbesLindesay/rfileify.svg)](https://greenkeeper.io/)
+
 # rfileify
 
   Convert any code using rfile and derivatives so that it supports browserify.

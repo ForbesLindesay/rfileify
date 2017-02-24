@@ -32,13 +32,13 @@
   "license": "MIT",
   "dependencies": {
     "through": "~2.3.1",
-    "falafel": "~0.3.1"
+    "falafel": "~2.0.0"
   },
   "devDependencies": {
-    "mocha": "~1.9",
-    "browserify": "~2.12",
+    "mocha": "~3.2.0",
+    "browserify": "~14.1.0",
     "rfile": "~1.0.0",
-    "rhtml": "~0.0.1",
+    "rhtml": "~1.1.0",
     "ruglify": "~1.0.0"
   }
 }
